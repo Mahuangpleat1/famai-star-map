@@ -1,0 +1,15 @@
+# Export controls do not remove files from Git history. Publish the allowlisted
+# working-tree package from scripts/package-source.py, not this repository history.
+references/ export-ignore
+todos/ export-ignore
+.superpowers/ export-ignore
+docs/superpowers/ export-ignore
+docs/legal-universe-*.md export-ignore
+docs/TECH-DEBT.md export-ignore
+.playwright-mcp/ export-ignore
+test-results/ export-ignore
+playwright-report/ export-ignore
+release/ export-ignore
+*.log export-ignore
+.env* export-ignore
+.DS_Store export-ignore

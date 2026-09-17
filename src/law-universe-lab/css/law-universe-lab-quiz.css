@@ -1,0 +1,473 @@
+/* ============================================================== */
+/* Law Universe Lab · quiz (Quiz / QuizSession / ToastStack)        */
+/* Imported by:                                                    */
+/*   LawUniverseQuiz.tsx                                           */
+/*   LawUniverseQuizSession.tsx                                    */
+/*   ToastStack.tsx                                                */
+/* ============================================================== */
+
+/* === Quiz mode (entry modal) === */
+.law-universe-quiz {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  padding: 20px;
+}
+
+.law-universe-quiz__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: radial-gradient(circle at 50% 32%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.78) 75%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.law-universe-quiz__panel {
+  position: relative;
+  width: min(560px, calc(100vw - 32px));
+  background: rgba(4, 5, 6, 0.95);
+  border: 1px solid rgba(255, 248, 223, 0.32);
+  border-radius: 16px;
+  padding: 16px 18px;
+  color: var(--universe-label);
+  font-family: inherit;
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.law-universe-quiz__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.law-universe-quiz__title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  /* Track I a11y: 0.7 → 0.78,11px quiz 标题 WCAG AA */
+  color: var(--universe-text-hint, rgba(246, 241, 223, 0.78));
+  text-transform: uppercase;
+}
+
+.law-universe-quiz__counter {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  /* Track I a11y: 0.5 → 0.78,11px 计数文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(246, 241, 223, 0.78));
+  margin-left: 6px;
+}
+
+.law-universe-quiz__score {
+  margin-left: auto;
+  margin-right: 6px;
+  font-size: 11px;
+  color: rgba(127, 220, 134, 0.9);
+}
+
+.law-universe-quiz__close {
+  border: 0;
+  background: rgba(246, 241, 223, 0.06);
+  /* Track I a11y: 0.6 → 0.78,关闭按钮文字 WCAG AA */
+  color: var(--universe-text-hint, rgba(246, 241, 223, 0.78));
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.law-universe-quiz__source {
+  margin-bottom: 12px;
+}
+
+.law-universe-quiz__source label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+  /* Track I a11y: 0.6 → 0.78,11px label 文字 WCAG AA */
+  color: var(--universe-text-hint, rgba(246, 241, 223, 0.78));
+}
+
+.law-universe-quiz__source select {
+  background: rgba(246, 241, 223, 0.06);
+  color: var(--universe-label);
+  border: 1px solid rgba(246, 241, 223, 0.18);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.law-universe-quiz__body h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--universe-label);
+}
+
+.law-universe-quiz__context {
+  margin: 0 0 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  /* Track I a11y: 0.6 → 0.78,11px context 文字 WCAG AA */
+  color: var(--universe-text-hint, rgba(246, 241, 223, 0.78));
+  padding: 8px 10px;
+  border-left: 2px solid rgba(255, 248, 223, 0.4);
+  background: rgba(246, 241, 223, 0.04);
+  border-radius: 0 6px 6px 0;
+}
+
+.law-universe-quiz__options {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.law-universe-quiz__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: rgba(246, 241, 223, 0.04);
+  border: 1px solid rgba(246, 241, 223, 0.14);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--universe-label);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.law-universe-quiz__option:hover:not(:disabled) {
+  background: rgba(246, 241, 223, 0.1);
+}
+
+.law-universe-quiz__option.is-selected {
+  border-color: rgba(255, 248, 223, 0.55);
+  background: rgba(255, 248, 223, 0.12);
+}
+
+.law-universe-quiz__option.is-correct {
+  border-color: rgba(127, 220, 134, 0.6);
+  background: rgba(127, 220, 134, 0.12);
+  color: rgba(127, 220, 134, 0.95);
+}
+
+.law-universe-quiz__option.is-wrong {
+  border-color: rgba(220, 100, 100, 0.55);
+  background: rgba(220, 100, 100, 0.1);
+}
+
+.law-universe-quiz__option-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(246, 241, 223, 0.08);
+  /* Track I a11y: 0.7 → 0.78,10px 选项序号 WCAG AA (b=bold 强化可读) */
+  color: var(--universe-text-hi, rgba(246, 241, 223, 0.78));
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.law-universe-quiz__option.is-correct .law-universe-quiz__option-letter,
+.law-universe-quiz__option.is-wrong .law-universe-quiz__option-letter {
+  color: inherit;
+}
+
+.law-universe-quiz__rationale {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(246, 241, 223, 0.14);
+  border-radius: 8px;
+  background: rgba(246, 241, 223, 0.04);
+  display: grid;
+  gap: 8px;
+}
+
+.law-universe-quiz__rationale p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(246, 241, 223, 0.78);
+}
+
+.law-universe-quiz__jump {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 248, 223, 0.78);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 0;
+  text-align: left;
+  width: max-content;
+}
+
+.law-universe-quiz__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.law-universe-quiz__actions button,
+.law-universe-quiz__restart {
+  border: 0;
+  background: rgba(255, 248, 223, 0.18);
+  color: var(--universe-core);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.law-universe-quiz__actions button:disabled {
+  background: rgba(246, 241, 223, 0.06);
+  color: rgba(246, 241, 223, 0.4);
+  cursor: default;
+}
+
+.law-universe-quiz__actions button:not(:disabled):hover,
+.law-universe-quiz__restart:hover {
+  background: rgba(255, 248, 223, 0.28);
+}
+
+.law-universe-quiz__result h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  color: var(--universe-label);
+}
+
+.law-universe-quiz__result-score {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--universe-core);
+  margin: 4px 0 12px;
+}
+
+.law-universe-quiz__result ul {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.law-universe-quiz__result li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.law-universe-quiz__result li.is-correct {
+  color: rgba(127, 220, 134, 0.95);
+}
+
+.law-universe-quiz__result li.is-wrong {
+  color: rgba(220, 100, 100, 0.95);
+}
+
+.law-universe-quiz__jump-small {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  /* Track I a11y: 0.7 → 0.78,jump 链接文字 WCAG AA (12.1:1) */
+  color: var(--universe-text-hi, rgba(255, 248, 223, 0.78));
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 0;
+}
+
+/* === Phase 3 续 · 复习会话 (QuizSession) === */
+.session-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.session-progress__bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--universe-accent-gold, #f3c86f), #d99c44);
+  transition: width 240ms ease;
+}
+.session-fill {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+.session-fill__input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(243, 200, 111, 0.2);
+  color: #f6efd9;
+  font-size: 14px;
+  border-radius: 4px;
+}
+.session-fill__input:focus {
+  outline: 1px solid var(--universe-accent-gold, #f3c86f);
+}
+.session-fill__submit,
+.session-essay__submit {
+  align-self: flex-start;
+  padding: 8px 18px;
+  background: var(--universe-accent-gold, #f3c86f);
+  color: #05070a;
+  border: none;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.session-fill__answer {
+  font-size: 13px;
+  color: #d99c44;
+}
+.session-essay {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+.session-essay__textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(243, 200, 111, 0.2);
+  color: #f6efd9;
+  font-size: 13px;
+  line-height: 1.6;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+}
+.session-essay__textarea:focus {
+  outline: 1px solid var(--universe-accent-gold, #f3c86f);
+}
+.session-essay__answer {
+  font-size: 12px;
+  color: #b9a98b;
+}
+.session-essay__answer strong {
+  color: var(--universe-accent-gold, #f3c86f);
+}
+.session-summary {
+  padding: 24px 20px;
+  text-align: center;
+}
+.session-summary h3 {
+  font-size: 18px;
+  color: var(--universe-accent-gold, #f3c86f);
+  margin-bottom: 12px;
+}
+.session-summary__score {
+  font-size: 14px;
+  color: var(--universe-accent-amber);
+  margin-bottom: 20px;
+}
+.session-summary__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.session-summary__actions button {
+  padding: 8px 18px;
+  background: rgba(243, 200, 111, 0.1);
+  border: 1px solid rgba(243, 200, 111, 0.3);
+  color: var(--universe-accent-gold, #f3c86f);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.session-summary__actions button:hover {
+  background: rgba(243, 200, 111, 0.2);
+}
+.session-summary__next-due {
+  font-size: 12px;
+  color: #b9a98b;
+  margin-bottom: 16px;
+}
+
+/* === Phase 3 polish · Toast 容器 (ToastStack) === */
+.toast-stack {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 360px;
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(15, 18, 25, 0.96);
+  border-left: 3px solid var(--universe-accent-amber, #d99c44);
+  color: #f6efd9;
+  font-size: 13px;
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  animation: toast-slide-up 240ms ease;
+}
+.toast--success { border-left-color: rgba(127, 220, 134, 0.85); }
+.toast--warning { border-left-color: var(--universe-accent-gold, #f3c86f); }
+.toast--error   { border-left-color: rgba(220, 100, 100, 0.9); }
+.toast--info    { border-left-color: rgba(150, 200, 220, 0.85); }
+.toast__message { flex: 1; }
+.toast__action,
+.toast__close {
+  background: transparent;
+  border: 1px solid rgba(243, 200, 111, 0.3);
+  color: var(--universe-accent-gold, #f3c86f);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.toast__close { padding: 4px 6px; }
+.toast__action:hover,
+.toast__close:hover { background: rgba(243, 200, 111, 0.1); }
+@keyframes toast-slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

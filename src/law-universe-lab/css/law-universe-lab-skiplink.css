@@ -1,0 +1,32 @@
+/* SkipLink 样式 —— a11y 跳到主内容 */
+
+.law-universe-skip-link {
+  position: fixed;
+  top: -100px;
+  left: 12px;
+  z-index: 9999;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #05070a;
+  background: #f3c86f;
+  border: 1px solid #f3c86f;
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: top 120ms ease;
+}
+
+.law-universe-skip-link:focus {
+  top: 12px;
+  outline: 2px solid #f3c86f;
+  outline-offset: 2px;
+  /* 让 outline 在 focus 元素外 */
+  box-shadow: 0 0 0 4px rgba(243, 200, 111, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-skip-link {
+    transition: none;
+  }
+}

@@ -1,0 +1,70 @@
+version: 2
+
+# 法脉星图 Dependabot config
+# 监控: npm (weekly) + github-actions (monthly)
+# Group: 合并相关依赖为单 PR, 减少噪音
+# Auto-rebase: 让 Dependabot 跟随主分支演化
+
+updates:
+  # ──────────────────────────── npm dependencies ────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      # 早 8 点(UTC)开始, 避开 Asia 工作时间高峰
+      time: "08:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
+      include: "scope"
+    # 合并 PR, 同主题一周一个 PR, 减少噪音
+    groups:
+      react-three:
+        # React + 3D 栈: react / react-dom / three / @react-three/*
+        # spec 写 3 个 pattern, 这里把 react-dom 也算上(它跟 react 是双子包, 一起升更稳)
+        patterns:
+          - "react"
+          - "react-dom"
+          - "three"
+          - "@react-three/*"
+      test:
+        # 测试栈: vitest + testing-library + jsdom
+        patterns:
+          - "vitest"
+          - "@testing-library/*"
+          - "jsdom"
+      lint:
+        # 静态分析: typescript-eslint + eslint + types
+        patterns:
+          - "typescript-eslint"
+          - "eslint"
+          - "@types/*"
+    rebase-strategy: "auto"
+
+  # ──────────────────────────── GitHub Actions ────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "08:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      actions:
+        # 全部 GitHub Action 合并一个 PR
+        patterns:
+          - "*"
+    rebase-strategy: "auto"

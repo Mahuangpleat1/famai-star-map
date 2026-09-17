@@ -1,0 +1,9 @@
+# 法脉星图 robots.txt
+# 站点是单页应用 (SPA),只有根路径可被索引。其它路由由前端处理。
+
+User-agent: *
+Allow: /
+Disallow: /?cmd=
+Disallow: /*?*
+
+Sitemap: /sitemap.xml

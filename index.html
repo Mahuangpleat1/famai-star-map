@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#05070a" />
+    <meta name="theme-color" content="#0a0d12" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>法脉星河 · 中国法学宇宙可视化</title>
+    <meta
+      name="description"
+      content="法脉星河把中国法律体系可视化为 3D 太阳系 —— 预置十一部门法星系组成学习底图。你可以浏览知识星系、上传资料并由 LLM 抽取概念、审核归类、绘制关系、抽题刷题。所有数据本地优先。"
+    />
+    <meta name="keywords" content="法学,法律可视化,中国法律,民法典,法理学,宪法,刑法,行政法,商法,诉讼法,经济法,社会法,国际法,法律史,知识图谱,3D 太阳系,LLM,间隔重复,SM-2,Obsidian" />
+    <meta name="author" content="法脉星河项目" />
+    <meta name="robots" content="index,follow" />
+    <meta name="application-name" content="法脉星河" />
+    <meta name="apple-mobile-web-app-title" content="法脉星河" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- CSP meta 兜底:部署时建议用 HTTP 头覆盖,本 meta 在 file:// / 静态托管无 header 场景下生效。 -->
+    <!--
+      - default-src 'self': 仅允许同源资源
+      - script-src 'self' 'unsafe-eval': Vite dev 模式 + 某些 three.js 库需要 eval
+      - style-src 'self' 'unsafe-inline': CSS-in-JS / inline <style> 需要
+      - img-src 'self' data: blob: https://flk.npc.gov.cn: 用户头像 / 文档预览(可空) + 法条引用图
+      - connect-src 'self' https:: LLM 是用户配置的任意 HTTPS,Phase 5 收紧
+      - frame-src 'self': 仅允许同源 iframe
+      - object-src 'none': 禁 Flash / 插件
+      - base-uri 'self': 禁 <base> 跳转劫持
+      - form-action 'self': 表单只能提交到同源
+      - frame-ancestors 'none': 防 clickjacking
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://flk.npc.gov.cn; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* http://[::1]:* ws://localhost:* ws://127.0.0.1:*; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="法脉星河 · 中国法学宇宙可视化" />
+    <meta property="og:description" content="把中国法律体系可视化为 3D 太阳系：11 大部门法 × 610 节点 × 969 关系。本地优先，支持 LLM 抽取、审核、关系网、刷题、Obsidian 同步。" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="法脉星河" />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="法脉星河：中国法律 3D 太阳系可视化" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="法脉星河 · 中国法学宇宙可视化" />
+    <meta name="twitter:description" content="中国法律 3D 太阳系 · 11 部门法 / 610 节点 / 969 关系 · 本地优先" />
+    <meta name="twitter:image" content="/og-image.svg" />
+    <meta name="twitter:image:alt" content="法脉星河：中国法律 3D 太阳系可视化" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/mask-icon.svg" color="#f3c86f" />
+    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml" fetchpriority="high" />
+
+    <!-- JSON-LD 结构化数据:提升 SEO,Google Rich Result 可识别 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "法脉星河",
+        "alternateName": "Famai Star Map",
+        "description": "把中国法律体系可视化为 3D 太阳系：11 部门法星系与 610 个节点组成学习底图。本地优先,支持 LLM 抽取、审核、关系网、刷题、Obsidian 同步。",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any (Web)",
+        "browserRequirements": "Requires JavaScript. Requires HTML5. Requires WebGL.",
+        "inLanguage": "zh-CN",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "CNY"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "法脉星河开源贡献者"
+        },
+        "featureList": [
+          "3D 法学知识图谱可视化 (Three.js)",
+          "610 节点 / 969 关系 / 11 部门法",
+          "本地优先 · 零账号零追踪",
+          "LLM 抽取概念 (OpenAI 兼容)",
+          "PDF / Markdown / TXT 资料上传",
+          "间隔重复 (SM-2) 刷题",
+          "Obsidian 双向同步"
+        ]
+      }
+    </script>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Performance: preconnect + dns-prefetch + preload -->
+
+    <!-- 打印样式:录讲义 / 导出讲义 PDF 时调用浏览器打印 -->
+    <link rel="stylesheet" href="/src/law-universe-lab/css/law-universe-lab-print.css" media="print" />
+
+    <!-- Fallback CSS so first paint isn't blank before React mounts -->
+    <style>
+      :root { color-scheme: dark; }
+      html, body { margin: 0; padding: 0; height: 100%; background: #05070a; color: #e7e3d2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; }
+      #root { height: 100%; }
+      .app-pre-shell { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; pointer-events: none; opacity: 1; transition: opacity 200ms ease; }
+      .app-pre-shell__title { font-size: 18px; letter-spacing: 0.32em; color: #f3c86f; font-weight: 500; }
+      .app-pre-shell__subtitle { font-size: 12px; letter-spacing: 0.4em; color: rgba(231, 227, 210, 0.6); }
+      .app-pre-shell__pulse { width: 12px; height: 12px; border-radius: 50%; background: #f3c86f; box-shadow: 0 0 18px rgba(243, 200, 111, 0.7); animation: app-pre-shell-pulse 1.6s ease-in-out infinite; }
+      @keyframes app-pre-shell-pulse { 0%, 100% { transform: scale(0.6); opacity: 0.4; } 50% { transform: scale(1); opacity: 1; } }
+      body.app-mounted .app-pre-shell { opacity: 0; }
+      @media (prefers-reduced-motion: reduce) { .app-pre-shell__pulse { animation: none; } }
+
+      /* 404 路径降级 UI —— 与 inline 404 脚本配对 */
+      body.app-route-miss .app-pre-shell { display: none !important; }
+      .app-route-miss { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(circle at 50% 50%, rgba(243, 200, 111, 0.06), transparent 40%), #05070a; z-index: 9999; }
+      .app-route-miss__panel { max-width: 480px; text-align: center; padding: 32px 28px; background: rgba(11, 13, 18, 0.78); border: 1px solid rgba(243, 200, 111, 0.28); border-radius: 12px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6); }
+      .app-route-miss__title { margin: 0 0 12px 0; color: #f3c86f; font-size: 22px; font-weight: 600; letter-spacing: 0.04em; }
+      .app-route-miss__hint { margin: 0 0 16px 0; color: rgba(231, 227, 210, 0.85); font-size: 14px; line-height: 1.6; }
+      .app-route-miss__path { margin: 0 0 20px 0; color: rgba(231, 227, 210, 0.55); font-size: 12px; word-break: break-all; }
+      .app-route-miss__path code { display: inline-block; margin-left: 4px; padding: 2px 8px; background: rgba(243, 200, 111, 0.12); color: #f3c86f; border-radius: 4px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", monospace; font-size: 12px; }
+      .app-route-miss__btn { display: inline-block; padding: 10px 24px; background: linear-gradient(135deg, #f3c86f 0%, #d99c44 100%); color: #05070a; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 6px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+      .app-route-miss__btn:hover, .app-route-miss__btn:focus-visible { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(243, 200, 111, 0.3); outline: none; }
+      .app-route-miss__btn:focus-visible { outline: 2px solid #f3c86f; outline-offset: 3px; }
+      @media (prefers-reduced-motion: reduce) { .app-route-miss__btn { transition: none; } }
+    </style>
+
+    <!-- 早期启动脚本(隐藏 pre-shell + 404 降级):CSP script-src 无 unsafe-inline,必须外链 -->
+    <script src="/early-boot.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div class="app-pre-shell" aria-hidden="true">
+      <div class="app-pre-shell__pulse"></div>
+      <div class="app-pre-shell__title">法脉星河</div>
+      <div class="app-pre-shell__subtitle">中国法学宇宙 · 正在展开</div>
+    </div>
+    <noscript>
+      <div style="padding: 24px; color: #e7e3d2; font-family: -apple-system, sans-serif;">
+        <h1 style="color: #f3c86f;">法脉星河需要 JavaScript</h1>
+        <p>本应用是 3D 交互式可视化产品，必须启用 JavaScript 才能运行。请在浏览器设置里打开脚本支持后刷新页面。</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+/* ============================================================== */
+/* Law Universe Lab · base (tokens, page wrapper, shared rules)  */
+/* Imported once by LawUniverseLabPage.tsx                       */
+/* ============================================================== */
+
+:root {
+  --universe-bg: #020203;
+  --universe-bg-soft: #060708;
+  --universe-core: #fff8df;
+  --universe-core-hot: #ffffff;
+  --universe-node: #e9e4d2;
+  --universe-label: #f6f1df;
+  /* Track I a11y: 副文字色提亮,基色 #e7e3d2(暖白)与暗背景(05,07,10)的对比度:
+     alpha 0.78 → ratio 11.6:1 (WCAG AAA)
+     alpha 0.85 → ratio 14.0:1
+     alpha 0.95 → ratio 17.4:1
+     注:本项目实际有两套文字基色:
+       - rgb(231, 227, 210) (on-page, 与 #e7e3d2 等价)
+       - rgb(246, 241, 223) (panels.css 默认,与 #f6f1df 等价)
+     两套各自提亮 */
+  --universe-label-muted: rgba(246, 241, 223, 0.78);     /* Track I: 0.6 → 0.78,正文 WCAG AA */
+  /* on-page (rgb 231,227,210) 文字族 */
+  --universe-text-primary: rgba(231, 227, 210, 0.95);     /* 主文字,WCAG AA + AAA */
+  --universe-text-secondary: rgba(231, 227, 210, 0.85);   /* 副标题/字段标签 */
+  --universe-text-hint: rgba(231, 227, 210, 0.78);       /* hint 文字(≥ 0.78 正文安全) */
+  --universe-text-meta: rgba(231, 227, 210, 0.7);        /* 元信息(大字体阈值) */
+  --universe-text-disabled: rgba(231, 227, 210, 0.5);     /* disabled 状态(非 WCAG 必达) */
+  /* panels (rgb 246,241,223) 文字族,与 --universe-label 同色 */
+  --universe-text-pri: rgba(246, 241, 223, 0.95);
+  --universe-text-sec: rgba(246, 241, 223, 0.85);
+  --universe-text-hi: rgba(246, 241, 223, 0.78);         /* hint / small 文字,WCAG AA 正文阈值 */
+  --universe-text-me: rgba(246, 241, 223, 0.7);          /* 元信息,大字体阈值 */
+  --universe-text-dis: rgba(246, 241, 223, 0.5);         /* disabled 状态 */
+  --universe-panel: rgba(4, 5, 6, 0.78);
+  --universe-panel-border: rgba(246, 241, 223, 0.18);
+  --universe-line: rgba(233, 228, 210, 0.16);
+  --universe-vignette: rgba(0, 0, 0, 0.7);
+  --universe-dust-dim: rgba(246, 241, 223, 0.1);
+  --universe-dust-mid: rgba(246, 241, 223, 0.18);
+  --universe-dust-hot: rgba(255, 248, 223, 0.34);
+  --universe-nebula-soft: rgba(246, 241, 223, 0.045);
+  --universe-nebula-mid: rgba(246, 241, 223, 0.075);
+  --universe-nebula-warm: rgba(201, 155, 85, 0.14);
+  --universe-nebula-cool: rgba(183, 201, 201, 0.09);
+  --universe-nebula-rose: rgba(169, 87, 69, 0.052);
+  --universe-accent-amber: #d99c44;
+  --universe-accent-gold: #f3c86f;
+  --universe-bg-deep: #05070a;
+}
+
+.law-universe-page {
+  --universe-panel-opacity: 0.64;
+  --universe-right-curtain-opacity: 0.76;
+  --universe-bottom-curtain-opacity: 0.78;
+  position: relative;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: var(--universe-label);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 248, 223, 0.092), transparent 17%),
+    radial-gradient(ellipse at 50% 53%, rgba(233, 228, 210, 0.06), transparent 43%),
+    radial-gradient(ellipse at 19% 29%, rgba(201, 155, 85, 0.04), transparent 34%),
+    radial-gradient(ellipse at 78% 20%, rgba(183, 201, 201, 0.034), transparent 32%),
+    radial-gradient(ellipse at 68% 76%, rgba(169, 87, 69, 0.022), transparent 36%),
+    linear-gradient(124deg, transparent 0 24%, rgba(246, 241, 223, 0.023) 35%, transparent 46% 100%),
+    linear-gradient(180deg, var(--universe-bg-soft), var(--universe-bg) 38%, #010102 100%),
+    var(--universe-bg);
+  isolation: isolate;
+}
+
+.law-universe-page[data-view-mode="overview"] {
+  --universe-panel-opacity: 0.42;
+  --universe-right-curtain-opacity: 0.54;
+  --universe-bottom-curtain-opacity: 0.64;
+}
+
+.law-universe-page[data-view-mode="system"] {
+  --universe-panel-opacity: 0.76;
+  --universe-right-curtain-opacity: 0.78;
+  --universe-bottom-curtain-opacity: 0.76;
+}
+
+.law-universe-page[data-view-mode="concept"],
+.law-universe-page[data-camera-state="focusing"] {
+  --universe-panel-opacity: 0.9;
+  --universe-right-curtain-opacity: 0.92;
+  --universe-bottom-curtain-opacity: 0.88;
+}
+
+.law-universe-page[data-cinematic-mode="intro"] {
+  --universe-panel-opacity: 0.08;
+  --universe-right-curtain-opacity: 0.22;
+  --universe-bottom-curtain-opacity: 0.42;
+}
+
+/* Shared pointer-events rule for interactive overlays (hud, system-index, detail) */
+.law-universe-hud,
+.law-universe-system-index,
+.law-universe-detail {
+  pointer-events: auto;
+}
+
+/* ============================================================== */
+/* a11y 增强层                                                     */
+/* - :focus-visible 全局金色 outline(键盘用户能清楚看到焦点位置)  */
+/* - prefers-reduced-motion: 禁用 CSS 动画/过渡(3D 场景由 hook 控制)*/
+/* - prefers-contrast: more: 强化边框/对比,适应低视力用户            */
+/* ============================================================== */
+
+/* 全局 :focus-visible —— 键盘焦点统一用金色 outline, 0.2em + 2px offset */
+.law-universe-page :focus-visible {
+  outline: 0.2em solid var(--universe-accent-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 鼠标点击的普通 focus(避免误显 outline)不强制覆盖 —— 上面用 :focus-visible 已经只命中键盘 */
+
+/* prefers-reduced-motion: 关闭非 3D 场景的 CSS 动画 / 过渡
+   3D 场景(camera / particles)由 usePrefersReducedMotion hook 处理,这里只处理 UI 动效 */
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-page,
+  .law-universe-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* 但保留用户明确意图的过渡 —— 比如 backup panel 的 fade-in */
+  .law-universe-backup-panel,
+  .law-universe-cheatsheet,
+  .law-universe-onboarding {
+    animation: none !important;
+  }
+}
+
+/* prefers-contrast: more: 提升对比度 + 强化边框, 满足低视力 / 强光环境用户 */
+@media (prefers-contrast: more) {
+  .law-universe-page {
+    --universe-panel-border: rgba(246, 241, 223, 0.55);
+    --universe-line: rgba(233, 228, 210, 0.4);
+    --universe-label-muted: rgba(246, 241, 223, 0.85);
+  }
+  /* 增强 panel 边框 */
+  .law-universe-detail,
+  .law-universe-workbench,
+  .law-universe-backup-panel,
+  .law-universe-cheatsheet,
+  .law-universe-command-palette__panel,
+  .law-universe-favorites__panel,
+  .law-universe-quiz__panel,
+  .law-universe-satellite-panel,
+  .law-universe-onboarding,
+  .law-universe-filter-bar,
+  .law-universe-path-panel,
+  .law-universe-learning-path {
+    border-width: 2px !important;
+  }
+  /* 增强 system index 选中态 */
+  .law-universe-system-index button.is-selected,
+  .law-universe-system-index button:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  /* 强化按钮文字 */
+  .law-universe-icon-button {
+    color: var(--universe-label);
+  }
+  /* 让 focus 更厚更显眼 */
+  .law-universe-page :focus-visible {
+    outline-width: 0.3em;
+    outline-offset: 3px;
+  }
+}

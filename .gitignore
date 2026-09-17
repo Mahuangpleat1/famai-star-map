@@ -1,0 +1,51 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+dist/
+build/
+*.tsbuildinfo
+
+# testing / coverage
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright-mcp/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# env
+.env
+.env.local
+.env.*.local
+todos/
+
+# local learning data, credentials and release output
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+famai-backup-*.json
+release/
+.superpowers/
+references/
+
+__pycache__/
+*.pyc

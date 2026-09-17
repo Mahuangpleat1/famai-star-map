@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0a1322" />
+      <stop offset="100%" stop-color="#03050a" />
+    </radialGradient>
+    <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fce4a4" />
+      <stop offset="50%" stop-color="#f3c86f" />
+      <stop offset="100%" stop-color="#a07634" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="planet1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#cdd9e6" />
+      <stop offset="100%" stop-color="#5a6c83" />
+    </radialGradient>
+    <radialGradient id="planet2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e7d3a3" />
+      <stop offset="100%" stop-color="#7a5a2a" />
+    </radialGradient>
+    <radialGradient id="planet3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a8c4d4" />
+      <stop offset="100%" stop-color="#3a5870" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGrad)" />
+  <!-- 星点 -->
+  <g fill="#cfd6e1" opacity="0.5">
+    <circle cx="120" cy="80" r="1.4" />
+    <circle cx="220" cy="180" r="0.9" />
+    <circle cx="320" cy="60" r="1.2" />
+    <circle cx="80" cy="320" r="1" />
+    <circle cx="180" cy="450" r="1.4" />
+    <circle cx="950" cy="100" r="1.1" />
+    <circle cx="1080" cy="220" r="1.3" />
+    <circle cx="1020" cy="380" r="0.9" />
+    <circle cx="1130" cy="490" r="1.2" />
+    <circle cx="900" cy="540" r="1" />
+    <circle cx="640" cy="100" r="0.9" />
+    <circle cx="540" cy="540" r="1" />
+  </g>
+  <!-- 轨道圆 -->
+  <g fill="none" stroke="rgba(243,200,111,0.16)" stroke-width="0.8">
+    <ellipse cx="600" cy="320" rx="280" ry="80" />
+    <ellipse cx="600" cy="320" rx="180" ry="50" />
+    <ellipse cx="600" cy="320" rx="380" ry="120" />
+  </g>
+  <!-- 中心太阳(法典) -->
+  <circle cx="600" cy="320" r="100" fill="url(#coreGrad)" opacity="0.8" />
+  <circle cx="600" cy="320" r="22" fill="#f3c86f" />
+  <circle cx="600" cy="320" r="8" fill="#fce4a4" />
+  <!-- 行星(11 部门法) -->
+  <g>
+    <circle cx="430" cy="270" r="11" fill="url(#planet1)" />
+    <circle cx="780" cy="305" r="14" fill="url(#planet2)" />
+    <circle cx="600" cy="160" r="9" fill="url(#planet3)" />
+    <circle cx="600" cy="490" r="10" fill="url(#planet1)" />
+    <circle cx="320" cy="350" r="8" fill="url(#planet2)" />
+    <circle cx="880" cy="360" r="9" fill="url(#planet3)" />
+    <circle cx="430" cy="430" r="7" fill="url(#planet1)" />
+    <circle cx="770" cy="430" r="8" fill="url(#planet2)" />
+    <circle cx="690" cy="200" r="6" fill="url(#planet3)" />
+    <circle cx="510" cy="200" r="6" fill="url(#planet1)" />
+    <circle cx="510" cy="440" r="6" fill="url(#planet2)" />
+  </g>
+  <!-- 标题 -->
+  <g font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+    <text x="80" y="120" font-size="64" font-weight="600" fill="#f3c86f" letter-spacing="8">法脉星图</text>
+    <text x="82" y="170" font-size="22" font-weight="400" fill="#cfd6e1" letter-spacing="4" opacity="0.85">中国法学宇宙 · 3D 可视化</text>
+    <text x="80" y="500" font-size="20" font-weight="500" fill="#e7e3d2" letter-spacing="2">11 部门法 · 610 节点 · 969 关系</text>
+    <text x="80" y="540" font-size="18" font-weight="400" fill="#cfd6e1" letter-spacing="1" opacity="0.75">本地优先 · LLM 抽取 · 间隔重复 · Obsidian 同步</text>
+  </g>
+</svg>

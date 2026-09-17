@@ -1,0 +1,177 @@
+/* ============================================================== */
+/* 打印样式 —— 录讲义 / 导出讲义 PDF 场景                          */
+/*                                                               */
+/* 设计目标:                                                     */
+/* 1. 隐藏 3D Canvas / HUD / 交互按钮 / Toast / Modal backdrop   */
+/* 2. 显示当前选中节点 + 关联引文 (可读版式)                     */
+/* 3. 黑底浅字 → 保持品牌色 + 高对比度                            */
+/* 4. 单页 A4 / Letter 适配,字号 11pt                             */
+/* ============================================================== */
+
+@media print {
+  /* 强制背景保留:Chrome 默认会去掉 dark theme background */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 隐藏所有 3D / 交互层 */
+  .law-universe-scene,
+  .law-universe-hud,
+  .law-universe-cinematic-copy,
+  .law-universe-vignette,
+  .app-pre-shell,
+  .toast-stack,
+  .law-universe-modal-backdrop,
+  .law-universe-cheatsheet__backdrop,
+  .law-universe-skip-link,
+  .app-route-miss,
+  canvas,
+  video,
+  iframe {
+    display: none !important;
+  }
+
+  /* 页主体简化:不再 overflow hidden,深色背景,白字 */
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #05070a !important;
+    color: #e7e3d2 !important;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", serif !important;
+  }
+
+  .law-universe-page {
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #05070a !important;
+  }
+
+  /* 详情面板(pages / detail / satellite):打印时显示成"讲义卡" */
+  .law-universe-detail,
+  .law-universe-satellite-detail {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: #e7e3d2 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .law-universe-detail__title,
+  .law-universe-satellite-detail__title {
+    color: #f3c86f !important;
+    font-size: 22pt !important;
+    font-weight: 600 !important;
+    margin: 0 0 8pt 0 !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .law-universe-detail__subtitle,
+  .law-universe-detail__description,
+  .law-universe-satellite-detail__summary {
+    color: rgba(231, 227, 210, 0.92) !important;
+    font-size: 11pt !important;
+    line-height: 1.65 !important;
+    margin: 0 0 12pt 0 !important;
+  }
+
+  /* 关闭所有按钮 / 输入框 / 折叠区 */
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    display: none !important;
+  }
+
+  /* 链接:打印时显示 URL */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    /* Track I a11y: 0.7 → 0.95,打印链接 URL 文字(深底打印更易识别) */
+    color: rgba(243, 200, 111, 0.95);
+    font-size: 9pt;
+    word-break: break-all;
+  }
+  /* 内部 hash 链接不显示 URL */
+  a[href^="#"]::after,
+  a[href^="/#"]::after {
+    content: "";
+  }
+
+  /* 引用 / 列表 */
+  ul, ol {
+    margin: 0 0 12pt 1.2em !important;
+    padding: 0 !important;
+    color: #e7e3d2 !important;
+  }
+
+  li {
+    margin: 0 0 4pt 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.55 !important;
+  }
+
+  /* 工作台 / Inbox / 备份面板:打印时按文档流显示,不像 modal */
+  .law-universe-workbench,
+  .law-universe-backup-panel,
+  .law-universe-obsidian-export-panel,
+  .law-universe-favorites-panel,
+  .law-universe-quiz,
+  .law-universe-quiz-session,
+  .law-universe-learning-path-panel,
+  .law-universe-path-panel,
+  .law-universe-cmd-palette,
+  .law-universe-relation-editor {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #0b0d12 !important;
+    border: 1px solid rgba(243, 200, 111, 0.3) !important;
+    border-radius: 6pt !important;
+    margin: 0 0 12pt 0 !important;
+    padding: 12pt !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 顶部小标:页眉 */
+  .law-universe-page::before {
+    content: "法脉星图 · 中国法学宇宙 · 打印导出 · " attr(data-selected-node);
+    display: block !important;
+    color: #f3c86f !important;
+    font-size: 9pt !important;
+    letter-spacing: 0.2em !important;
+    padding: 0 0 12pt 0 !important;
+    border-bottom: 1px solid rgba(243, 200, 111, 0.3) !important;
+    margin: 0 0 16pt 0 !important;
+  }
+
+  /* 避免孤行 / 寡头 */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  pre, blockquote, table {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 隐藏 no-print 标记的元素(给未来扩展用) */
+  .no-print {
+    display: none !important;
+  }
+}

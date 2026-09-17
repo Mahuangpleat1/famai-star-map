@@ -1,0 +1,339 @@
+/* LawUniverseBackupPanel 样式 */
+
+.law-universe-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(3, 5, 10, 0.7);
+  backdrop-filter: blur(4px);
+  animation: law-universe-modal-fade 140ms ease-out;
+}
+
+@keyframes law-universe-modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-modal-backdrop { animation: none; }
+}
+
+.law-universe-backup-panel {
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.98) 0%, rgba(7, 12, 22, 0.98) 100%);
+  border: 1px solid rgba(243, 200, 111, 0.3);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  color: #e7e3d2;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+.law-universe-backup-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(231, 227, 210, 0.08);
+  color: #f3c86f;
+}
+
+.law-universe-backup-panel__header h2 {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.law-universe-backup-panel__close {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  /* Track I a11y: 0.6 → 0.85,关闭按钮文字 WCAG AA (12.6:1) */
+  color: var(--universe-text-secondary, rgba(231, 227, 210, 0.85));
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.law-universe-backup-panel__close:hover {
+  color: #e7e3d2;
+  background: rgba(231, 227, 210, 0.08);
+  border-color: rgba(231, 227, 210, 0.18);
+}
+
+.law-universe-backup-panel__close:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 1px;
+}
+
+.law-universe-backup-panel__body {
+  padding: 16px 18px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.law-universe-backup-panel__section {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(231, 227, 210, 0.06);
+}
+
+.law-universe-backup-panel__section:last-of-type {
+  border-bottom: none;
+}
+
+.law-universe-backup-panel__section h3 {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f3c86f;
+  letter-spacing: 0.04em;
+}
+
+.law-universe-backup-panel__desc {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  /* Track I a11y: 0.7 → 0.78,12px 描述文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+.law-universe-backup-panel__meta {
+  margin: 0 0 10px;
+  font-size: 12px;
+  /* Track I a11y: 0.5 → 0.78,12px 元信息文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+.law-universe-backup-panel__meta strong {
+  color: #f3c86f;
+  font-weight: 500;
+}
+
+.law-universe-backup-panel__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #e7e3d2;
+  background: rgba(231, 227, 210, 0.04);
+  border: 1px solid rgba(231, 227, 210, 0.16);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, transform 60ms ease;
+}
+
+.law-universe-backup-panel__btn:hover:not(:disabled) {
+  background: rgba(231, 227, 210, 0.08);
+  border-color: rgba(231, 227, 210, 0.28);
+}
+
+.law-universe-backup-panel__btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.law-universe-backup-panel__btn:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 2px;
+}
+
+.law-universe-backup-panel__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.law-universe-backup-panel__btn--primary {
+  background: rgba(243, 200, 111, 0.18);
+  border-color: rgba(243, 200, 111, 0.42);
+  color: #f3c86f;
+  font-weight: 500;
+}
+
+.law-universe-backup-panel__btn--primary:hover:not(:disabled) {
+  background: rgba(243, 200, 111, 0.26);
+  border-color: rgba(243, 200, 111, 0.62);
+}
+
+.law-universe-backup-panel__preview {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.36);
+  border: 1px solid rgba(231, 227, 210, 0.1);
+  border-radius: 8px;
+}
+
+.law-universe-backup-panel__preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.law-universe-backup-panel__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.law-universe-backup-panel__badge--ok {
+  color: #7ed3a3;
+  background: rgba(126, 211, 163, 0.12);
+  border: 1px solid rgba(126, 211, 163, 0.3);
+}
+
+.law-universe-backup-panel__badge--err {
+  color: #e89a9a;
+  background: rgba(232, 154, 154, 0.12);
+  border: 1px solid rgba(232, 154, 154, 0.3);
+}
+
+.law-universe-backup-panel__preview-size {
+  margin-left: auto;
+  font-size: 11px;
+  /* Track I a11y: 0.5 → 0.78,11px 字号元数据 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.law-universe-backup-panel__counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: rgba(231, 227, 210, 0.78);
+}
+
+.law-universe-backup-panel__counts li {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.law-universe-backup-panel__warnings {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  background: rgba(243, 200, 111, 0.08);
+  border-left: 2px solid rgba(243, 200, 111, 0.6);
+  border-radius: 4px;
+  list-style: none;
+  font-size: 12px;
+  color: rgba(231, 227, 210, 0.85);
+}
+
+.law-universe-backup-panel__warnings li {
+  margin: 2px 0;
+}
+
+.law-universe-backup-panel__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.law-universe-backup-panel__status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.law-universe-backup-panel__status--busy {
+  background: rgba(120, 169, 222, 0.1);
+  border: 1px solid rgba(120, 169, 222, 0.3);
+  color: #a8c4d4;
+}
+
+.law-universe-backup-panel__status--success {
+  background: rgba(126, 211, 163, 0.1);
+  border: 1px solid rgba(126, 211, 163, 0.3);
+  color: #b4dec1;
+}
+
+.law-universe-backup-panel__status--error {
+  background: rgba(232, 154, 154, 0.1);
+  border: 1px solid rgba(232, 154, 154, 0.3);
+  color: #e89a9a;
+}
+
+.law-universe-backup-panel__status span {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.law-universe-backup-panel__status small {
+  font-size: 11px;
+  opacity: 0.85;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  word-break: break-all;
+}
+
+.law-universe-backup-panel__spinner {
+  animation: law-universe-spin 1s linear infinite;
+  flex: 0 0 auto;
+}
+
+@keyframes law-universe-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-backup-panel__spinner { animation: none; }
+  .law-universe-backup-panel__btn { transition: none; }
+  .law-universe-backup-panel__btn:active:not(:disabled) { transform: none; }
+}
+
+.law-universe-backup-panel__footer {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(231, 227, 210, 0.08);
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.law-universe-backup-panel__footer p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  /* Track I a11y: 0.5 → 0.78,11px 脚注文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+@media (max-width: 480px) {
+  .law-universe-modal-backdrop {
+    padding: 12px;
+  }
+  .law-universe-backup-panel {
+    max-height: calc(100vh - 24px);
+  }
+  .law-universe-backup-panel__counts {
+    grid-template-columns: 1fr;
+  }
+}

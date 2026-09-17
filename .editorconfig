@@ -1,0 +1,22 @@
+# Editor / IDE 统一配置 · 法脉星图
+# 大部分现代 IDE(WebStorm / VSCode / Sublime)自动识别这个文件
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+# Markdown 行尾两个空格是"硬换行",不能 trim
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab

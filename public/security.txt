@@ -1,0 +1,28 @@
+# 法脉星图 安全策略与第三方依赖说明
+# 此文件用于内容安全策略 (CSP) / Referrer-Policy 注释参考。
+# 实际 CSP 在部署时通过 HTTP 响应头设置,这里仅记录项目实际依赖的外部域。
+
+[connect-src]
+# 用户配置的 LLM Provider (OpenAI 兼容) baseURL — 由用户在设置面板配置
+# 默认模板: api.openai.com / api.deepseek.com / api.moonshot.cn / ollama.local
+# Phase 5 切到自有后端代理后,这里改成自己的 API 域名
+
+[img-src]
+# self
+# 用户头像 / 文档预览 — 暂无
+
+[font-src]
+# self, system
+
+[style-src]
+# self, unsafe-inline (React 18 styled-jsx 兼容)
+
+[script-src]
+# self, unsafe-eval (Vite dev mode + 某些 three.js 库需要 eval)
+
+[frame-src]
+# self
+# 未来嵌入 PDF / 视频时再开放
+
+[manifest]
+/manifest.webmanifest

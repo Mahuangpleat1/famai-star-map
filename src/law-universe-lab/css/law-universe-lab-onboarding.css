@@ -1,0 +1,353 @@
+/* OnboardingHint 样式 */
+
+.law-universe-onboarding {
+  position: fixed;
+  right: 24px;
+  top: 80px;
+  z-index: 80;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.96) 0%, rgba(7, 12, 22, 0.96) 100%);
+  border: 1px solid rgba(243, 200, 111, 0.28);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(243, 200, 111, 0.06) inset;
+  backdrop-filter: blur(8px);
+  color: #e7e3d2;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  animation: law-universe-onboarding-in 220ms ease-out;
+}
+
+@keyframes law-universe-onboarding-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-onboarding {
+    animation: none;
+  }
+}
+
+.law-universe-onboarding__inner {
+  padding: 18px 18px 16px;
+  position: relative;
+}
+
+.law-universe-onboarding__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  /* Track I a11y: 0.6 → 0.85,关闭按钮文字 WCAG AA (12.6:1) */
+  color: var(--universe-text-secondary, rgba(231, 227, 210, 0.85));
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.law-universe-onboarding__close:hover {
+  background: rgba(231, 227, 210, 0.08);
+  color: #e7e3d2;
+  border-color: rgba(231, 227, 210, 0.18);
+}
+
+.law-universe-onboarding__close:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 1px;
+}
+
+.law-universe-onboarding__header {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.law-universe-onboarding__badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: #f3c86f;
+  background: rgba(243, 200, 111, 0.12);
+  border: 1px solid rgba(243, 200, 111, 0.3);
+  border-radius: 4px;
+}
+
+.law-universe-onboarding__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f3c86f;
+}
+
+.law-universe-onboarding__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.law-universe-onboarding__step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.law-universe-onboarding__step-icon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: rgba(243, 200, 111, 0.1);
+  color: #f3c86f;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+}
+
+.law-universe-onboarding__step-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.law-universe-onboarding__step-title {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e7e3d2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.law-universe-onboarding__step-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #f3c86f;
+  background: rgba(243, 200, 111, 0.18);
+  border-radius: 50%;
+  font-family: ui-monospace, monospace;
+}
+
+.law-universe-onboarding__step-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  /* Track I a11y: 0.7 → 0.78,12px step 描述文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+.law-universe-onboarding__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.law-universe-onboarding__cta {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #05070a;
+  background: linear-gradient(180deg, #f8d28a 0%, #f3c86f 100%);
+  border: 1px solid rgba(243, 200, 111, 0.6);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: filter 120ms ease, transform 60ms ease;
+}
+
+.law-universe-onboarding__cta:hover {
+  filter: brightness(1.08);
+}
+
+.law-universe-onboarding__cta:active {
+  transform: translateY(1px);
+}
+
+.law-universe-onboarding__cta:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .law-universe-onboarding {
+    right: 12px;
+    left: 12px;
+    top: 70px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-onboarding__cta {
+    transition: none;
+  }
+  .law-universe-onboarding__cta:active {
+    transform: none;
+  }
+}
+
+
+/* KeyboardCheatsheet 样式 */
+
+.law-universe-cheatsheet__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(3, 5, 10, 0.7);
+  backdrop-filter: blur(4px);
+  animation: law-universe-cheatsheet-fade 140ms ease-out;
+}
+
+@keyframes law-universe-cheatsheet-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-cheatsheet__backdrop {
+    animation: none;
+  }
+}
+
+.law-universe-cheatsheet {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.98) 0%, rgba(7, 12, 22, 0.98) 100%);
+  border: 1px solid rgba(243, 200, 111, 0.32);
+  border-radius: 14px;
+  padding: 22px 22px 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
+  color: #e7e3d2;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.law-universe-cheatsheet__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  /* Track I a11y: 0.6 → 0.85,关闭按钮文字 WCAG AA */
+  color: var(--universe-text-secondary, rgba(231, 227, 210, 0.85));
+  cursor: pointer;
+}
+
+.law-universe-cheatsheet__close:hover {
+  background: rgba(231, 227, 210, 0.08);
+  color: #e7e3d2;
+  border-color: rgba(231, 227, 210, 0.18);
+}
+
+.law-universe-cheatsheet__close:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 1px;
+}
+
+.law-universe-cheatsheet__title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f3c86f;
+}
+
+.law-universe-cheatsheet__subtitle {
+  margin: 0 0 14px;
+  font-size: 12px;
+  /* Track I a11y: 0.6 → 0.78,12px 副标题 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+.law-universe-cheatsheet__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.law-universe-cheatsheet__table tr + tr {
+  border-top: 1px solid rgba(231, 227, 210, 0.06);
+}
+
+.law-universe-cheatsheet__keys {
+  padding: 9px 12px 9px 0;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.law-universe-cheatsheet__desc {
+  padding: 9px 0;
+  color: rgba(231, 227, 210, 0.85);
+}
+
+.law-universe-cheatsheet__key-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.law-universe-cheatsheet__plus {
+  /* Track I a11y: 0.4 → 0.78,11px "+" 符号 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+  font-size: 11px;
+}
+
+.law-universe-cheatsheet__kbd {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: #f3c86f;
+  background: rgba(243, 200, 111, 0.1);
+  border: 1px solid rgba(243, 200, 111, 0.28);
+  border-radius: 4px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.law-universe-cheatsheet__hint {
+  margin: 14px 0 0;
+  font-size: 11px;
+  /* Track I a11y: 0.4 → 0.78,11px 提示文字 WCAG AA (10.7:1) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .law-universe-cheatsheet {
+    padding: 18px 16px 14px;
+  }
+  .law-universe-cheatsheet__table {
+    font-size: 12px;
+  }
+}

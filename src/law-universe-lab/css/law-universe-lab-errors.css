@@ -1,0 +1,167 @@
+/* ErrorBoundary 全局降级 UI 样式 */
+
+.law-universe-error-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at center, #0a1322 0%, #03050a 100%);
+  color: #e7e3d2;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  overflow: auto;
+}
+
+.law-universe-error-fallback__panel {
+  width: 100%;
+  max-width: 560px;
+  background: rgba(11, 18, 32, 0.92);
+  border: 1px solid rgba(243, 200, 111, 0.28);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(243, 200, 111, 0.08) inset;
+  backdrop-filter: blur(8px);
+}
+
+.law-universe-error-fallback__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(243, 200, 111, 0.12);
+  color: #f3c86f;
+  margin-bottom: 14px;
+}
+
+.law-universe-error-fallback__title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f3c86f;
+}
+
+.law-universe-error-fallback__subtitle {
+  margin: 0 0 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  /* Track I a11y: 0.72 → 0.85,WCAG AA 4.5:1 (估算 13.9:1) */
+  color: var(--universe-text-secondary, rgba(231, 227, 210, 0.85));
+}
+
+.law-universe-error-fallback__details {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(231, 227, 210, 0.08);
+  border-radius: 8px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e7d3a3;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.law-universe-error-fallback__details:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 2px;
+}
+
+.law-universe-error-fallback__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.law-universe-error-fallback__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(231, 227, 210, 0.16);
+  background: rgba(231, 227, 210, 0.04);
+  color: #e7e3d2;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, transform 60ms ease;
+}
+
+.law-universe-error-fallback__btn:hover {
+  background: rgba(231, 227, 210, 0.08);
+  border-color: rgba(231, 227, 210, 0.28);
+}
+
+.law-universe-error-fallback__btn:active {
+  transform: translateY(1px);
+}
+
+.law-universe-error-fallback__btn:focus-visible {
+  outline: 2px solid #f3c86f;
+  outline-offset: 2px;
+}
+
+.law-universe-error-fallback__btn--primary {
+  background: rgba(243, 200, 111, 0.18);
+  border-color: rgba(243, 200, 111, 0.42);
+  color: #f3c86f;
+  font-weight: 500;
+}
+
+.law-universe-error-fallback__btn--primary:hover {
+  background: rgba(243, 200, 111, 0.26);
+  border-color: rgba(243, 200, 111, 0.62);
+}
+
+.law-universe-error-fallback__btn--danger {
+  border-color: rgba(220, 90, 90, 0.32);
+  color: #e89a9a;
+}
+
+.law-universe-error-fallback__btn--danger:hover {
+  background: rgba(220, 90, 90, 0.1);
+  border-color: rgba(220, 90, 90, 0.5);
+  color: #f4adad;
+}
+
+.law-universe-error-fallback__hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  /* Track I a11y: 0.5 → 0.78,WCAG AA 4.5:1 (12px 小字正文) */
+  color: var(--universe-text-hint, rgba(231, 227, 210, 0.78));
+}
+
+@media (max-width: 480px) {
+  .law-universe-error-fallback {
+    padding: 16px;
+  }
+  .law-universe-error-fallback__panel {
+    padding: 20px 18px 18px;
+  }
+  .law-universe-error-fallback__title {
+    font-size: 16px;
+  }
+  .law-universe-error-fallback__btn {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-universe-error-fallback__btn {
+    transition: none;
+  }
+  .law-universe-error-fallback__btn:active {
+    transform: none;
+  }
+}
