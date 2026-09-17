@@ -90,7 +90,7 @@
 }
 
 .law-universe-page[data-cinematic-mode="intro"] {
-  --universe-panel-opacity: 0.08;
+  /* Keep the current view's readable panels while the background intro plays. */
   --universe-right-curtain-opacity: 0.22;
   --universe-bottom-curtain-opacity: 0.42;
 }

@@ -17,11 +17,6 @@
   opacity: 0.96;
 }
 
-.law-universe-page[data-cinematic-mode="intro"] .law-universe-hud,
-.law-universe-page[data-cinematic-mode="intro"] .law-universe-system-index {
-  opacity: 0.14;
-}
-
 .law-universe-hud__controls {
   display: grid;
   gap: 7px;
