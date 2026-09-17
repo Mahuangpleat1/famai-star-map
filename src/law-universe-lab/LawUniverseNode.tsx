@@ -16,6 +16,7 @@ interface LawUniverseNodeProps {
   introProgress: number;
   focusIgnitionKey: number;
   motionScale: number;
+  economical?: boolean;
   onSelectNode: (id: string) => void;
   onHoverNode: (id: string | null) => void;
 }
@@ -39,6 +40,7 @@ export function LawUniverseNode({
   introProgress,
   focusIgnitionKey,
   motionScale,
+  economical = false,
   onSelectNode,
   onHoverNode
 }: LawUniverseNodeProps) {
@@ -158,8 +160,8 @@ export function LawUniverseNode({
         <meshBasicMaterial transparent opacity={0.001} depthWrite={false} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[visualRadius, node.type === "system-sun" ? 42 : 22, node.type === "system-sun" ? 42 : 22]} />
-        <meshStandardMaterial
+        <sphereGeometry args={[visualRadius, economical ? 12 : 24, economical ? 12 : 24]} />
+        {economical ? <meshBasicMaterial color={domainColor} transparent opacity={bodyOpacity} /> : <meshStandardMaterial
           ref={bodyMaterialRef}
           color={node.type === "system-sun" ? legalUniverseTheme.core : legalUniverseTheme.node}
           emissive={selected || hovered ? domainColor : node.type === "system-sun" ? domainColor : legalUniverseTheme.nodeSoft}
@@ -168,10 +170,10 @@ export function LawUniverseNode({
           metalness={0.02}
           transparent
           opacity={bodyOpacity}
-        />
+        />}
       </mesh>
       <mesh ref={haloRef}>
-        <sphereGeometry args={[visualRadius * (node.type === "system-sun" ? 2.24 : 2.55), 28, 28]} />
+        <sphereGeometry args={[visualRadius * (node.type === "system-sun" ? 2.24 : 2.55), 16, 16]} />
         <meshBasicMaterial
           ref={haloMaterialRef}
           color={domainColor}
@@ -181,8 +183,8 @@ export function LawUniverseNode({
           blending={THREE.AdditiveBlending}
         />
       </mesh>
-      <mesh ref={outerHaloRef}>
-        <sphereGeometry args={[visualRadius * (node.type === "system-sun" ? 3.4 : 3.8), 32, 32]} />
+      {!economical ? <mesh ref={outerHaloRef}>
+        <sphereGeometry args={[visualRadius * (node.type === "system-sun" ? 3.4 : 3.8), 16, 16]} />
         <meshBasicMaterial
           ref={outerHaloMaterialRef}
           color={domainColor}
@@ -191,8 +193,8 @@ export function LawUniverseNode({
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
-      </mesh>
-      <mesh ref={ignitionRingRef} rotation={[Math.PI / 2.24, 0.14, 0.28]}>
+      </mesh> : null}
+      {!economical ? <mesh ref={ignitionRingRef} rotation={[Math.PI / 2.24, 0.14, 0.28]}>
         <torusGeometry args={[visualRadius * (node.type === "system-sun" ? 4.4 : 4.0), 0.0035, 6, 128]} />
         <meshBasicMaterial
           ref={ignitionRingMaterialRef}
@@ -202,11 +204,11 @@ export function LawUniverseNode({
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
-      </mesh>
+      </mesh> : null}
       {selected || hovered ? (
         <pointLight ref={lightRef} color={domainColor} intensity={selected ? 0.84 : 0.42} distance={node.type === "system-sun" ? 7.2 : 4.2} />
       ) : null}
-      {node.type === "system-sun" && !isDimmed ? (
+      {node.type === "system-sun" && !isDimmed && !economical ? (
         <group>
           <mesh rotation={[Math.PI / 2.16, 0.08, 0.18]}>
             <torusGeometry args={[visualRadius * 3.0, 0.004, 6, 112]} />

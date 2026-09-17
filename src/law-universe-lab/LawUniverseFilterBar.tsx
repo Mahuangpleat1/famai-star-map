@@ -61,7 +61,9 @@ const LEVEL_LABEL: Record<number, string> = {
 };
 
 function useCompactViewport(): boolean {
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches
+  );
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 720px)");
     const update = () => setCompact(mediaQuery.matches);
@@ -86,7 +88,7 @@ export function LawUniverseFilterBar({
   onClear
 }: LawUniverseFilterBarProps) {
   const compactViewport = useCompactViewport();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(compactViewport);
   const hasActiveFilter =
     (filterState.nodeTypes !== null && filterState.nodeTypes.length > 0) ||
     (filterState.levels !== null && filterState.levels.length > 0) ||

@@ -10,9 +10,9 @@ import {
 import { useCommandPaletteHotkey } from "./hooks/useCommandPaletteHotkey";
 import { legalUniverseLearningPaths } from "../../data/legalUniverseLearningPaths";
 import { LawUniverseFilterBar } from "./LawUniverseFilterBar";
+import { LawUniverseDetailPanel } from "./LawUniverseDetailPanel";
 import { LawUniverseHud } from "./LawUniverseHud";
 import { usePathProgress } from "./hooks/usePathProgress";
-import { LawUniverseScene } from "./LawUniverseScene";
 import { useUserSatellites, type ReviewableSatellite } from "./useUserSatellites";
 import { useUserRelations } from "./useUserRelations";
 import { useDuplicateGroups } from "./useDuplicateGroups";
@@ -47,6 +47,13 @@ import { useStorageQuota } from "./hooks/useStorageQuota";
 import { PanelLoadingShell } from "./PanelLoadingShell";
 import "./css/law-universe-lab-base.css";
 import "./css/law-universe-lab-onboarding.css";
+import "./css/law-universe-lab-scene.css";
+
+// Keep the scene's footprint while its renderer downloads; real detail text
+// and navigation can paint without waiting for Three.js or WebGL startup.
+const LawUniverseScene = lazy(() =>
+  import("./LawUniverseScene").then((module) => ({ default: module.LawUniverseScene }))
+);
 
 /** @deprecated 兼容导出,改用 useFilters。 */
 export type { LegalUniverseFilterState } from "./hooks/useFilters";
@@ -54,7 +61,7 @@ export type { LegalUniverseFilterState } from "./hooks/useFilters";
 /* -------------------------------------------------------------------------- */
 /* Panel code-split                                                            */
 /* -------------------------------------------------------------------------- */
-// 这些面板都是按需打开(⌘K / Quiz / Workbench / 学习路径 / 详情等),
+// 这些面板都是按需打开(⌘K / Quiz / Workbench / 学习路径等),
 // 第一次打开时才下载对应 chunk,LabPage 主入口保持 thin。
 // Suspense fallback 由 PanelLoadingShell 统一提供,跟现有 pre-shell 风格一致。
 const LawUniverseCommandPalette = lazy(() =>
@@ -74,9 +81,6 @@ const LawUniverseWorkbenchPanel = lazy(() =>
 );
 const LawUniverseLearningPathPanel = lazy(() =>
   import("./LawUniverseLearningPathPanel").then((m) => ({ default: m.LawUniverseLearningPathPanel }))
-);
-const LawUniverseDetailPanel = lazy(() =>
-  import("./LawUniverseDetailPanel").then((m) => ({ default: m.LawUniverseDetailPanel }))
 );
 const LawUniversePathPanel = lazy(() =>
   import("./LawUniversePathPanel").then((m) => ({ default: m.LawUniversePathPanel }))
@@ -460,29 +464,31 @@ export function LawUniverseLabPage() {
       data-path-reachable={String(Boolean(computedPath && computedPath.hopCount > 0))}
     >
       <SkipLink targetId="law-universe-scene" />
-      <LawUniverseScene
-        selectedNodeId={focus.focusState.selectedNodeId}
-        hoveredNodeId={hover.hoveredNodeId}
-        motionPaused={effectiveMotionPaused}
-        cameraFocusKey={focus.focusState.focusKey}
-        focusIgnitionKey={focus.focusState.focusKey}
-        zoomLevel={zoom.zoomLevel}
-        filter={filters.sceneFilter}
-        path={computedPath}
-        satellites={userSatellites}
-        satelliteVisible={satVis.satelliteVisible}
-        relations={userRelations}
-        relationVisible={relVis.relationVisible}
-        onSelectSatellite={satellite.setSelectedSatellite}
-        onCommitSatelliteMove={commitSatelliteMove}
-        onDragStateChange={setIsDragging}
-        onSelectNode={selectNode}
-        onHoverNode={hover.setHoveredNodeId}
-        onReset={resetView}
-        onFocusComplete={focus.markFocusComplete}
-        onCameraState={focus.setCameraState}
-        onCameraFrame={setCameraFrame}
-      />
+      <Suspense fallback={<div className="law-universe-scene" id="law-universe-scene" aria-busy="true" aria-label="3D 星图正在加载" />}>
+        <LawUniverseScene
+          selectedNodeId={focus.focusState.selectedNodeId}
+          hoveredNodeId={hover.hoveredNodeId}
+          motionPaused={effectiveMotionPaused}
+          cameraFocusKey={focus.focusState.focusKey}
+          focusIgnitionKey={focus.focusState.focusKey}
+          zoomLevel={zoom.zoomLevel}
+          filter={filters.sceneFilter}
+          path={computedPath}
+          satellites={userSatellites}
+          satelliteVisible={satVis.satelliteVisible}
+          relations={userRelations}
+          relationVisible={relVis.relationVisible}
+          onSelectSatellite={satellite.setSelectedSatellite}
+          onCommitSatelliteMove={commitSatelliteMove}
+          onDragStateChange={setIsDragging}
+          onSelectNode={selectNode}
+          onHoverNode={hover.setHoveredNodeId}
+          onReset={resetView}
+          onFocusComplete={focus.markFocusComplete}
+          onCameraState={focus.setCameraState}
+          onCameraFrame={setCameraFrame}
+        />
+      </Suspense>
       <div className="law-universe-vignette" aria-hidden="true" />
       <div
         className="law-universe-cinematic-copy"
@@ -552,9 +558,7 @@ export function LawUniverseLabPage() {
         </Suspense>
       ) : null}
       {focus.visibleDetailNode ? (
-        <Suspense fallback={<PanelLoadingShell variant="inline" label="载入详情..." />}>
-          <LawUniverseDetailPanel node={focus.visibleDetailNode} onSelectNode={selectNode} />
-        </Suspense>
+        <LawUniverseDetailPanel node={focus.visibleDetailNode} onSelectNode={selectNode} />
       ) : null}
       {modals.searchOpen ? (
         <Suspense fallback={<PanelLoadingShell variant="modal" label="载入搜索..." />}>

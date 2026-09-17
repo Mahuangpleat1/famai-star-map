@@ -13,7 +13,7 @@ beforeEach(async () => {
 afterEach(async () => { cleanup(); await __resetDBForTests(); });
 it("关系连续删除会刷新详情与主图，不会重新写回已删关系", async () => {
   render(<LawUniverseLabPage />);
-  const open = screen.getByRole("button", {name: "打开测试卫星"});
+  const open = await screen.findByRole("button", {name: "打开测试卫星"});
   await waitFor(() => expect(open).toBeEnabled());
   fireEvent.click(open);
   const editor = await screen.findByTestId("law-universe-relation-editor");

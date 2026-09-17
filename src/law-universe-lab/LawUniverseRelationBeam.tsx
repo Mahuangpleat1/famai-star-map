@@ -1,5 +1,5 @@
 import { Line } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { getLegalUniverseNodeById } from "../../data/legalUniverseData";
@@ -13,6 +13,7 @@ import {
   writeLawUniverseMovingSegment
 } from "./legalUniverseVisuals";
 import type { LegalUniverseEdge, LegalUniverseVector } from "./types";
+import { createScreenSpaceLineRaycast } from "./lawUniverseLineRaycast";
 
 interface LawUniverseRelationBeamProps {
   edge: LegalUniverseEdge;
@@ -20,6 +21,8 @@ interface LawUniverseRelationBeamProps {
   hoveredNodeId: string | null;
   introProgress: number;
   focusIgnitionKey: number;
+  animated?: boolean;
+  economical?: boolean;
   onSelectNode: (id: string) => void;
 }
 
@@ -35,8 +38,12 @@ export function LawUniverseRelationBeam({
   hoveredNodeId,
   introProgress,
   focusIgnitionKey,
+  animated = true,
+  economical = false,
   onSelectNode
 }: LawUniverseRelationBeamProps) {
+  const size = useThree((state) => state.size);
+  const raycast = useMemo(() => createScreenSpaceLineRaycast(size.width, size.height), [size.width, size.height]);
   const movingSegmentRef = useRef<THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial>>(null);
   const movingMaterialRef = useRef<THREE.LineBasicMaterial>(null);
   const sparkMaterialRef = useRef<THREE.PointsMaterial>(null);
@@ -98,8 +105,13 @@ export function LawUniverseRelationBeam({
         ? 0.028
         : 0.046;
   const color = active ? getLegalUniverseColor(edge.colorKey) : edge.type === "historical-influence" ? getLegalUniverseColor("legal-history") : legalUniverseTheme.line;
+  const simplePositions = useMemo(() => path ? new Float32Array(path.strands[0].points.slice(1).flatMap((point, index) => {
+    const previous = path.strands[0].points[index];
+    return [previous.x, previous.y, previous.z, point.x, point.y, point.z];
+  })) : null, [path]);
 
   useFrame(({ clock }) => {
+    if (!animated) return;
     const elapsed = clock.getElapsedTime();
 
     if (ignitionKeyRef.current !== focusIgnitionKey) {
@@ -145,6 +157,15 @@ export function LawUniverseRelationBeam({
 
   if (!path) {
     return null;
+  }
+
+  if (economical && simplePositions) {
+    return (
+      <lineSegments raycast={raycast} onClick={(event) => { event.stopPropagation(); onSelectNode(edge.target === selectedNodeId ? edge.source : edge.target); }}>
+        <bufferGeometry><bufferAttribute attach="attributes-position" args={[simplePositions, 3]} /></bufferGeometry>
+        <lineBasicMaterial color={color} transparent opacity={active ? 0.35 : 0.025} depthWrite={false} />
+      </lineSegments>
+    );
   }
 
   return (

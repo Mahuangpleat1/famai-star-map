@@ -17,8 +17,12 @@ import * as userDb from "./legalUniverseUserDb";
 import type { UserQuizItem } from "./userDataTypes";
 
 // 跳过 Three.js / WebGL 渲染(只测 React 子树 + useToast 集成)
+const sceneState = vi.hoisted(() => ({ blocked: false }));
 vi.mock("./LawUniverseScene", () => ({
-  LawUniverseScene: () => null
+  LawUniverseScene: () => {
+    if (sceneState.blocked) throw new Promise(() => {});
+    return null;
+  }
 }));
 
 // 防御性 mock:虽然 LabPage 不直接 import,子组件(LawUniverseSatelliteDetailPanel)会调 LLM
@@ -52,6 +56,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  sceneState.blocked = false;
   vi.restoreAllMocks();
   // 清掉 auto-prompt 24h 闸,避免跨测试污染
   try {
@@ -76,6 +81,13 @@ function makeDueItem(id: string, conceptId: string, conceptTitle: string, now: n
 }
 
 describe("LawUniverseLabPage useToast 集成", () => {
+  it("keeps the real detail and controls visible while the 3D scene is loading", async () => {
+    sceneState.blocked = true;
+    render(<LawUniverseLabPage />);
+    expect(screen.getByTestId("law-universe-detail")).toHaveAttribute("data-visible-node", "universe-core");
+    expect(screen.getByTestId("law-universe-filter-bar")).toBeInTheDocument();
+    await act(async () => {});
+  });
   it("listQuizItems 失败时弹 error toast 包含「加载失败」", async () => {
     vi.spyOn(userDb, "listQuizItems").mockRejectedValue(new Error("db fail"));
     render(<LawUniverseLabPage />);

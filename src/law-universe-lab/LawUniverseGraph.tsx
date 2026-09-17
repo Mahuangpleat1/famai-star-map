@@ -17,6 +17,7 @@ interface LawUniverseGraphProps {
   hoveredNodeId: string | null;
   motionPaused: boolean;
   reducedMotion: boolean;
+  economical?: boolean;
   introProgress: number;
   focusIgnitionKey: number;
   filter: LegalUniverseSceneFilter;
@@ -29,6 +30,7 @@ export function LawUniverseGraph({
   hoveredNodeId,
   motionPaused,
   reducedMotion,
+  economical = false,
   introProgress,
   focusIgnitionKey,
   filter,
@@ -76,6 +78,8 @@ export function LawUniverseGraph({
           hoveredNodeId={hoveredNodeId}
           introProgress={Math.max(0.22, introProgress)}
           focusIgnitionKey={focusIgnitionKey}
+          animated={!motionPaused && !reducedMotion}
+          economical={economical}
           onSelectNode={onSelectNode}
         />
       ))}
@@ -92,6 +96,7 @@ export function LawUniverseGraph({
             introProgress={introProgress}
             focusIgnitionKey={focusIgnitionKey}
             motionScale={motionScale}
+            economical={economical}
             onSelectNode={onSelectNode}
             onHoverNode={onHoverNode}
           />
