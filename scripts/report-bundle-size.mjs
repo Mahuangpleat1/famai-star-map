@@ -233,33 +233,40 @@ export async function walkDist(rootDir) {
 export function parseFirstLoadFromHtml(html) {
   if (typeof html !== "string" || html.length === 0) return null;
   const set = new Set();
+  // Vite's module entry identifies the deployment prefix; dist files themselves
+  // remain under assets/ even when their URLs start with /repo-name/assets/.
+  const moduleEntries = [...html.matchAll(/<script[^>]*type=["']module["'][^>]*\bsrc=["']([^"']+)["']/gi)];
+  const entry = moduleEntries[0]?.[1].split(/[?#]/)[0] ?? "";
+  const assetsAt = entry.lastIndexOf("/assets/");
+  const base = assetsAt >= 0 ? entry.slice(0, assetsAt + 1) : "";
   // 收集 <script type="module" src="...">,主入口
   for (const m of html.matchAll(/<script[^>]*type=["']module["'][^>]*\bsrc=["']([^"']+)["']/gi)) {
-    set.add(normalizeAssetRef(m[1]));
+    set.add(normalizeAssetRef(m[1], base));
   }
   // 收集 <link rel="modulepreload" href="...">
   for (const m of html.matchAll(/<link[^>]*\brel=["']modulepreload["'][^>]*\bhref=["']([^"']+)["']/gi)) {
-    set.add(normalizeAssetRef(m[1]));
+    set.add(normalizeAssetRef(m[1], base));
   }
   // 收集 <link rel="preload" as="script" ...>
   for (const m of html.matchAll(/<link[^>]*\brel=["']preload["'][^>]*\bhref=["']([^"']+)["']/gi)) {
-    set.add(normalizeAssetRef(m[1]));
+    set.add(normalizeAssetRef(m[1], base));
   }
   // 收集 <link rel="stylesheet" href="..."> — 渲染阻塞,也算 first load
   for (const m of html.matchAll(/<link[^>]*\brel=["']stylesheet["'][^>]*\bhref=["']([^"']+)["']/gi)) {
-    set.add(normalizeAssetRef(m[1]));
+    set.add(normalizeAssetRef(m[1], base));
   }
-  return set.size > 0 ? set : null;
+  if (set.size === 0) return null;
+  set.add("index.html");
+  return set;
 }
 
 /** 把 "/assets/index-XYZ.js" 或 "assets/index-XYZ.js" 统一为 "assets/index-XYZ.js" */
-function normalizeAssetRef(ref) {
+function normalizeAssetRef(ref, base = "") {
   let s = String(ref).trim();
+  if (base && s.startsWith(base)) s = s.slice(base.length);
+  if (s.startsWith("./")) s = s.slice(2);
   if (s.startsWith("/")) s = s.slice(1);
-  // 丢弃 querystring
-  const qi = s.indexOf("?");
-  if (qi >= 0) s = s.slice(0, qi);
-  return s;
+  return s.split(/[?#]/)[0];
 }
 
 /**
