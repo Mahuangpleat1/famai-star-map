@@ -23,5 +23,7 @@ describe("index.html CSP 约束", () => {
 
   it("早期启动脚本通过外链引入(CSP self 允许)", () => {
     expect(html).toMatch(/<script\b[^>]*src="\/early-boot\.js"[^>]*>/);
+    const earlyBoot = scriptBlocks.find(([, attrs]) => /src="\/early-boot\.js"/.test(attrs));
+    expect(earlyBoot?.[1]).toMatch(/\bdefer\b/);
   });
 });
