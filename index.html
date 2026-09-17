@@ -134,8 +134,8 @@
       @media (prefers-reduced-motion: reduce) { .app-route-miss__btn { transition: none; } }
     </style>
 
-    <!-- 早期启动脚本(隐藏 pre-shell + 404 降级):CSP script-src 无 unsafe-inline,必须外链 -->
-    <script src="/early-boot.js"></script>
+    <!-- 启动屏脚本延后执行,保留 CSP 同源外链且不阻塞 HTML 解析 -->
+    <script defer src="/early-boot.js"></script>
   </head>
   <body>
     <div id="root"></div>
