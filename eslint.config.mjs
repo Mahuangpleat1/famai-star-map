@@ -20,6 +20,10 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 export default tseslint.config(
   {
     ignores: [
+      // Generated source archives, publication staging and internal evidence.
+      // Their copied files are not additional application source roots.
+      ".superpowers/**",
+      "release/**",
       "dist/**",
       "node_modules/**",
       "coverage/**",

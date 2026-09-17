@@ -20,6 +20,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          // The only initial page stays a separate chunk, but its static import
+          // lets Vite preload it with the entry instead of waiting for React.lazy.
+          if (id.endsWith("/src/law-universe-lab/LawUniverseLabPage.tsx")) {
+            return "LawUniverseLabPage";
+          }
           if (id.includes("node_modules")) {
             // three.js 单独拆(3D 场景专用)
             if (id.includes("three") || id.includes("@react-three")) {
