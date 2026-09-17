@@ -6,7 +6,9 @@
 
 [![CI](https://github.com/pallwalt/famai-star-map/actions/workflows/ci.yml/badge.svg)](https://github.com/pallwalt/famai-star-map/actions/workflows/ci.yml)
 
-[English](README.en.md) · [快速开始](#快速开始) · [合成示例](examples/README.md) · [贡献指南](CONTRIBUTING.md)
+[在线体验](https://pallwalt.github.io/famai-star-map/) · [English](README.en.md) · [快速开始](#快速开始) · [合成示例](examples/README.md) · [贡献指南](CONTRIBUTING.md)
+
+在线预览无需安装，浏览预置图谱无需 API Key。AI 分析和报告仍需自带服务与 Key，并受下文的数据、隐私和功能限制约束；也可按快速开始在本地运行或自行部署。
 
 ![在刑法星系中聚焦正当防卫](docs/screenshots/focus.png)
 

@@ -4,7 +4,9 @@
 
 Import notes, connect concepts across documents with your own AI service, review the results, and export a study report.
 
-[中文](README.md) · [Examples](examples/README.md) · [Contributing](CONTRIBUTING.md)
+[Live preview](https://pallwalt.github.io/famai-star-map/) · [中文](README.md) · [Examples](examples/README.md) · [Contributing](CONTRIBUTING.md)
+
+The online preview needs no installation or API key to browse the built-in map. AI analysis and reports still require your own service and key, with the data, privacy, and feature limits described below. Local setup and self-hosting remain available.
 
 ![Exploring a concept in the criminal-law galaxy](docs/screenshots/focus.png)
 
