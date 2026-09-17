@@ -1,10 +1,10 @@
-import { legalUniverseEdges, legalUniverseNodes, legalUniverseSourceRefs } from "../../data/legalUniverseData";
+import { getLegalUniverseNodeById, legalUniverseEdges, legalUniverseNodes, legalUniverseSourceRefs } from "../../data/legalUniverseData";
 import type { LegalUniverseEdge, LegalUniverseNode } from "./types";
 
 export type LegalUniverseViewMode = "overview" | "system" | "concept";
 
 export function getLegalUniverseViewMode(selectedNodeId: string): LegalUniverseViewMode {
-  const selected = legalUniverseNodes.find((node) => node.id === selectedNodeId);
+  const selected = getLegalUniverseNodeById(selectedNodeId);
 
   if (!selected || selected.type === "universe-core") {
     return "overview";
@@ -41,7 +41,7 @@ export function isNodeAllowedByFilter(node: LegalUniverseNode, filter: LegalUniv
 
 export function getRelatedLegalUniverseNodeIds(selectedNodeId: string, hoveredNodeId?: string | null): Set<string> {
   const anchorId = hoveredNodeId ?? selectedNodeId;
-  const anchorNode = legalUniverseNodes.find((node) => node.id === anchorId);
+  const anchorNode = getLegalUniverseNodeById(anchorId);
   const related = new Set<string>(["universe-core", anchorId, selectedNodeId]);
 
   if (anchorNode?.systemId) {
@@ -94,8 +94,8 @@ export function shouldRenderLegalUniverseEdge(edge: LegalUniverseEdge, selectedN
   }
 
   if (viewMode === "overview") {
-    const source = legalUniverseNodes.find((node) => node.id === edge.source);
-    const target = legalUniverseNodes.find((node) => node.id === edge.target);
+    const source = getLegalUniverseNodeById(edge.source);
+    const target = getLegalUniverseNodeById(edge.target);
     const systemLevel =
       (source?.type === "system-sun" || source?.type === "universe-core") &&
       (target?.type === "system-sun" || target?.type === "universe-core");
@@ -113,14 +113,14 @@ export function shouldRenderLegalUniverseEdge(edge: LegalUniverseEdge, selectedN
     );
   }
 
-  const selected = legalUniverseNodes.find((node) => node.id === selectedNodeId);
+  const selected = getLegalUniverseNodeById(selectedNodeId);
   const systemId = selected?.type === "system-sun" ? selected.id : selected?.systemId;
   if (!systemId) {
     return false;
   }
 
-  const source = legalUniverseNodes.find((node) => node.id === edge.source);
-  const target = legalUniverseNodes.find((node) => node.id === edge.target);
+  const source = getLegalUniverseNodeById(edge.source);
+  const target = getLegalUniverseNodeById(edge.target);
   if (!source || !target) {
     return false;
   }
@@ -171,7 +171,7 @@ export function getLegalUniverseLabelVisible(
     return false;
   }
 
-  const selected = legalUniverseNodes.find((candidate) => candidate.id === selectedNodeId);
+  const selected = getLegalUniverseNodeById(selectedNodeId);
   const systemId = selected?.type === "system-sun" ? selected.id : selected?.systemId;
 
   if (selected?.type === "system-sun") {

@@ -130,7 +130,7 @@ export function LawUniverseScene({
     >
       <Canvas
         frameloop="demand"
-        dpr={constrainedRenderer ? 1 : [1, 1.7]}
+        dpr={rendererReady && !constrainedRenderer ? [1, 1.7] : 1}
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
         onPointerMissed={onReset}
         onCreated={({ gl }) => {
