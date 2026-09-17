@@ -4744,6 +4744,13 @@ export const legalUniverseNodes: LegalUniverseNode[] = [
   ])
 ];
 
+// The bundled graph is static; shared lookups avoid scanning every node per edge.
+const legalUniverseNodeIndex = new Map(legalUniverseNodes.map((node) => [node.id, node]));
+const nodeTitleCollator = new Intl.Collator("zh-Hans-CN");
+const rankedSystemNodes = legalUniverseNodes
+  .filter((node) => node.type === "system-sun")
+  .sort((a, b) => b.importance - a.importance || nodeTitleCollator.compare(a.title, b.title));
+
 function edge(
   source: string,
   target: string,
@@ -5328,7 +5335,7 @@ const intraSystemEdges = buildIntraSystemEdges();
 export const legalUniverseEdges: LegalUniverseEdge[] = [...systemEdges, ...conceptEdges, ...crossEdges, ...intraSystemEdges];
 
 export function getLegalUniverseNodeById(id: string, nodes = legalUniverseNodes): LegalUniverseNode | undefined {
-  return nodes.find((node) => node.id === id);
+  return nodes === legalUniverseNodes ? legalUniverseNodeIndex.get(id) : nodes.find((node) => node.id === id);
 }
 
 export function getLegalUniverseSystemById(id: string, systems = legalUniverseSystems): LegalUniverseSystem | undefined {
@@ -5344,17 +5351,14 @@ export function getLegalUniverseRelationsForNode(
     .filter((edgeItem) => edgeItem.source === id || edgeItem.target === id)
     .map((relation) => ({
       relation,
-      node: nodes.find((node) => node.id === (relation.source === id ? relation.target : relation.source))
+      node: getLegalUniverseNodeById(relation.source === id ? relation.target : relation.source, nodes)
     }))
     .filter((item): item is { node: LegalUniverseNode; relation: LegalUniverseEdge } => Boolean(item.node))
     .sort((a, b) => b.relation.weight - a.relation.weight);
 }
 
 export function getTopLegalUniverseSystems(limit = 14): LegalUniverseNode[] {
-  return legalUniverseNodes
-    .filter((node) => node.type === "system-sun")
-    .sort((a, b) => b.importance - a.importance || a.title.localeCompare(b.title, "zh-Hans-CN"))
-    .slice(0, limit);
+  return rankedSystemNodes.slice(0, limit);
 }
 
 export interface LegalUniversePathStep {
