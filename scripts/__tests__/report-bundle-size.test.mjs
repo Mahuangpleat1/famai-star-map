@@ -129,6 +129,19 @@ describe("formatBytes / formatPercent", () => {
 /* -------------------------------------------------------------------------- */
 
 describe("parseFirstLoadFromHtml", () => {
+  it("项目子路径资源仍计入500KiB首屏预算", () => {
+    const html = `<script type="module" src="/famai-star-map/assets/index-A.js"></script>
+<link rel="modulepreload" href="/famai-star-map/assets/graph-A.js?v=1#module">
+<link rel="preload" href="/famai-star-map/favicon.svg">`;
+    const set = parseFirstLoadFromHtml(html);
+    assert.deepEqual([...set].sort(), ["assets/graph-A.js", "assets/index-A.js", "favicon.svg", "index.html"]);
+    const entries = classifyEntries([
+      { relativePath: "index.html", size: 1024, gzip: 512 },
+      { relativePath: "assets/index-A.js", size: 5000, gzip: 1024 },
+      { relativePath: "assets/graph-A.js", size: 800000, gzip: 510 * 1024 }
+    ], set);
+    assert.equal(renderReport(entries, { baseline: null, regressions: [] }).hasFail, true);
+  });
   it("提取 <script type=module src>, modulepreload, preload, stylesheet", () => {
     const html = `
 <!doctype html>
@@ -147,7 +160,8 @@ describe("parseFirstLoadFromHtml", () => {
     const set = parseFirstLoadFromHtml(html);
     assert.ok(set instanceof Set);
     // 注意:index-XYZ.js 同时是 module script 和 modulepreload,set 自然去重
-    assert.equal(set.size, 5);
+    assert.equal(set.size, 6);
+    assert.ok(set.has("index.html"));
     assert.ok(set.has("assets/index-XYZ.js"));
     assert.ok(set.has("assets/react-XYZ.js"));
     assert.ok(set.has("assets/vendor-XYZ.js"));
