@@ -96,6 +96,21 @@ const KeyboardCheatsheet = lazy(() =>
 );
 
 export function LawUniverseLabPage() {
+  const [sceneReady, setSceneReady] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    // rAF callbacks run before paint. A second callback leaves a paint
+    // opportunity for the actual page before starting renderer work.
+    let frame = window.requestAnimationFrame(() => {
+      frame = window.requestAnimationFrame(() => {
+        if (!cancelled) setSceneReady(true);
+      });
+    });
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
   const [initialUrlState, writeHash] = useUrlHashState();
   const [cinematicIntro, settleCinematicIntro] = useCinematicIntro();
   const toast = useToast();
@@ -426,6 +441,7 @@ export function LawUniverseLabPage() {
   const undoSecondsLeft = 0;
 
   const filteredNodeCount = useMemo(() => legalUniverseNodes.length, []);  // simplified
+  const sceneFallback = <div className="law-universe-scene" id="law-universe-scene" aria-busy="true" aria-label="3D 星图正在加载" />;
 
   return (
     <main
@@ -464,8 +480,8 @@ export function LawUniverseLabPage() {
       data-path-reachable={String(Boolean(computedPath && computedPath.hopCount > 0))}
     >
       <SkipLink targetId="law-universe-scene" />
-      <Suspense fallback={<div className="law-universe-scene" id="law-universe-scene" aria-busy="true" aria-label="3D 星图正在加载" />}>
-        <LawUniverseScene
+      <Suspense fallback={sceneFallback}>
+        {sceneReady ? <LawUniverseScene
           selectedNodeId={focus.focusState.selectedNodeId}
           hoveredNodeId={hover.hoveredNodeId}
           motionPaused={effectiveMotionPaused}
@@ -487,7 +503,7 @@ export function LawUniverseLabPage() {
           onFocusComplete={focus.markFocusComplete}
           onCameraState={focus.setCameraState}
           onCameraFrame={setCameraFrame}
-        />
+        /> : sceneFallback}
       </Suspense>
       <div className="law-universe-vignette" aria-hidden="true" />
       <div

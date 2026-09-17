@@ -21,7 +21,7 @@ const sceneState = vi.hoisted(() => ({ blocked: false }));
 vi.mock("./LawUniverseScene", () => ({
   LawUniverseScene: () => {
     if (sceneState.blocked) throw new Promise(() => {});
-    return null;
+    return <div data-testid="test-scene" />;
   }
 }));
 
@@ -81,6 +81,30 @@ function makeDueItem(id: string, conceptId: string, conceptTitle: string, now: n
 }
 
 describe("LawUniverseLabPage useToast 集成", () => {
+  it("paints real page content before starting the scene on the next paint opportunity", async () => {
+    const frames: FrameRequestCallback[] = [];
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(callback => frames.push(callback));
+    vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
+    render(<LawUniverseLabPage />);
+    await act(async () => {});
+    expect(screen.getByTestId("law-universe-detail")).toBeInTheDocument();
+    expect(screen.queryByTestId("test-scene")).not.toBeInTheDocument();
+    await act(async () => { frames[0](0); });
+    expect(screen.queryByTestId("test-scene")).not.toBeInTheDocument();
+    await act(async () => { frames[1](16); });
+    expect(await screen.findByTestId("test-scene")).toBeInTheDocument();
+  });
+
+  it("cancels the pending scene frame when unmounted between paint callbacks", async () => {
+    const frames: FrameRequestCallback[] = [];
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(callback => frames.push(callback));
+    const cancel = vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
+    const { unmount } = render(<LawUniverseLabPage />);
+    await act(async () => { frames[0](0); });
+    unmount();
+    expect(cancel).toHaveBeenCalledWith(2);
+  });
+
   it("keeps the real detail and controls visible while the 3D scene is loading", async () => {
     sceneState.blocked = true;
     render(<LawUniverseLabPage />);
