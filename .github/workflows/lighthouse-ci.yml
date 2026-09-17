@@ -1,0 +1,98 @@
+name: Lighthouse CI
+
+# 法脉星图 Lighthouse CI workflow
+# 触发: PR / push to main / push to feat/**/fix/**/perf/**
+# 作用: 在合并前自动跑 Lighthouse 跑分 + 预算检查
+# 工具: treosh/lighthouse-ci-action@v12(封装 lhci autorun, 比 lhci/cli 更稳)
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "perf/**"
+  pull_request:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "perf/**"
+
+# 同一个 PR / push 只跑一次最新 commit,不浪费 CI
+concurrency:
+  group: lhci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  lighthouse-ci:
+    name: Lighthouse performance budget
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Production build
+        run: npm run build
+        env:
+          CI: "true"
+
+      - name: Start vite preview server
+        id: preview
+        run: |
+          # background preview server, 写 PID 便于后续 kill
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 \
+            > preview.log 2>&1 &
+          echo $! > preview.pid
+          echo "Preview PID: $(cat preview.pid)"
+
+          # healthcheck: 最多等 60s, http 200 才算 ready
+          timeout 60 bash -c 'until curl -fsS -o /dev/null http://127.0.0.1:4173/; do sleep 1; done'
+          echo "Preview server ready at http://127.0.0.1:4173/"
+
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: http://127.0.0.1:4173/
+          budgetPath: ./lighthouse-budget.json
+          uploadArtifacts: true
+          # 内部数据(private artifact URL), 不暴露到临时 public storage
+          temporaryPublicStorage: false
+          # 1 次跑分,10 min timeout 内必能完成
+          runs: 1
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f preview.pid ]; then
+            kill "$(cat preview.pid)" 2>/dev/null || true
+            rm -f preview.pid
+          fi
+          # 兜底: 万一 nohup 进程脱离 PID 文件
+          pkill -f "vite preview" 2>/dev/null || true
+          echo "Preview server stopped"
+
+      - name: Upload preview log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-preview-log
+          path: preview.log
+          retention-days: 3
+          if-no-files-found: ignore

@@ -1,0 +1,94 @@
+name: CI
+
+# 法脉星河 CI workflow
+# 触发:push / pull_request 到 main + 任何 feat/fix/refactor/chore 分支
+# 作用:在合并前自动跑 lint / typecheck / 数据校验 / 单元测试 / 生产构建 + 上传 dist/
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "refactor/**"
+      - "chore/**"
+      - "perf/**"
+      - "docs/**"
+  pull_request:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "refactor/**"
+      - "chore/**"
+      - "perf/**"
+      - "docs/**"
+
+# 同一个 PR / push 只跑一次最新 commit,不浪费 CI
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Lint · Typecheck · Test · Build (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # 验证当前依赖 engines 声明的 Node 20.19 / 22.12 兼容下限
+    # fail-fast: false 让一个版本失败不影响另一个版本跑完
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["20.19", "22.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Validate legal universe data
+        run: npm run check:legal-universe
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+        env:
+          CI: "true"
+
+      - name: Verify all (Track J 综合门禁)
+        # 串行跑完 8 步门禁(Track J 一条龙):
+        #   lint → typecheck → data → test → build → verify:sw → audit:contrast → test:contrast
+        # 失败立即 exit 1,详见 scripts/verify-all.mjs
+        run: npm run verify:all
+
+      - name: Script and source-package behavior tests
+        run: npm run test:scripts && python3 -m unittest discover -s scripts/__tests__ -p 'test_package_source.py'
+
+      - name: Upload dist artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-node${{ matrix.node-version }}-${{ github.sha }}
+          path: dist
+          retention-days: 14
+          if-no-files-found: error
